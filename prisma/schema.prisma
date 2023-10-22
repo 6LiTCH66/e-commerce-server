@@ -1,0 +1,98 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  firstName String?
+  lastName  String?
+  orders    Order[]
+  reviews   Review[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Cart      Cart[]
+}
+
+model Category {
+  id       Int       @id @default(autoincrement())
+  name     String
+  products Product[]
+}
+
+model Product {
+  id            Int           @id @default(autoincrement())
+  name          String
+  description   String
+  price         Float
+  stockQuantity Int
+  createdAt     DateTime      @default(now())
+  categoryId    Int
+  category      Category      @relation(fields: [categoryId], references: [id])
+  orderDetails  OrderDetail[]
+  reviews       Review[]
+  CartItems     CartItems[]
+}
+
+model Order {
+  id           Int           @id @default(autoincrement())
+  userId       Int
+  user         User          @relation(fields: [userId], references: [id])
+  totalPrice   Float
+  orderDate    DateTime      @default(now())
+  orderDetails OrderDetail[]
+}
+
+model OrderDetail {
+  id        Int     @id @default(autoincrement())
+  orderId   Int
+  order     Order   @relation(fields: [orderId], references: [id])
+  productId Int
+  product   Product @relation(fields: [productId], references: [id])
+  quantity  Int
+  price     Float
+}
+
+model Review {
+  id        Int      @id @default(autoincrement())
+  productId Int
+  product   Product  @relation(fields: [productId], references: [id])
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  rating    Int      @default(5)
+  comment   String
+  createdAt DateTime @default(now())
+}
+
+model Cart {
+  id     Int         @id @default(autoincrement())
+  userId Int
+  user   User        @relation(fields: [userId], references: [id])
+  items  CartItems[]
+}
+
+model CartItems {
+  id        Int     @id @default(autoincrement())
+  cardId    Int
+  cart      Cart    @relation(fields: [cardId], references: [id])
+  productId Int
+  product   Product @relation(fields: [productId], references: [id])
+  quantity  Int
+}
+
+model Session {
+  id        String   @id
+  sid       String   @unique
+  data      String
+  expiresAt DateTime
+}
