@@ -30,6 +30,18 @@ model Category {
   products Product[]
 }
 
+enum Size {
+  XXS
+  XS
+  S
+  M
+  L
+  XL
+  XXL
+  XXXL
+  XXXXL
+}
+
 model Product {
   id            Int           @id @default(autoincrement())
   name          String
@@ -42,6 +54,7 @@ model Product {
   orderDetails  OrderDetail[]
   reviews       Review[]
   CartItems     CartItems[]
+  size          Size
 }
 
 model Order {
