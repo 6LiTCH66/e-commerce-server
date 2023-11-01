@@ -30,7 +30,7 @@ model Category {
   products Product[]
 }
 
-enum Size {
+enum SizeOption {
   XXS
   XS
   S
@@ -42,19 +42,27 @@ enum Size {
   XXXXL
 }
 
-model Product {
-  id            Int           @id @default(autoincrement())
-  name          String
-  description   String
-  price         Float
+model Size {
+  id            Int        @id() @default(autoincrement())
+  size          SizeOption
   stockQuantity Int
-  createdAt     DateTime      @default(now())
-  categoryId    Int
-  category      Category      @relation(fields: [categoryId], references: [id])
-  orderDetails  OrderDetail[]
-  reviews       Review[]
-  CartItems     CartItems[]
-  size          Size
+  productId     Int
+  product       Product    @relation(fields: [productId], references: [id])
+}
+
+model Product {
+  id           Int           @id @default(autoincrement())
+  name         String
+  description  String
+  price        Float
+  createdAt    DateTime      @default(now())
+  categoryId   Int
+  category     Category      @relation(fields: [categoryId], references: [id])
+  orderDetails OrderDetail[]
+  reviews      Review[]
+  CartItems    CartItems[]
+  sizes        Size[]
+  images       String[]
 }
 
 model Order {
