@@ -1,4 +1,14 @@
-import { Body, Controller, Get, Post, UploadedFile, UploadedFiles, UseGuards, UseInterceptors } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Get,
+  Param, ParseIntPipe,
+  Post, Query,
+  UploadedFile,
+  UploadedFiles,
+  UseGuards,
+  UseInterceptors
+} from "@nestjs/common";
 import { AuthenticatedGuard } from "../auth/guard";
 import { ProductDto } from "./dto";
 import { ProductService } from "./product.service";
@@ -18,6 +28,18 @@ export class ProductController {
   @Get('get')
   getProducts(){
     return this.productService.getAllProducts()
+  }
+
+  @Get('details/:id')
+  getProductDetails(@Param('id', ParseIntPipe) productId: number){
+    return this.productService.getProductDetails(productId)
+
+  }
+
+  @Get('get')
+  getFilteredProducts(@Query() params: any){
+    console.log(params);
+
   }
 
 }

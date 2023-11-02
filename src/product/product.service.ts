@@ -1,4 +1,4 @@
-import { BadRequestException, HttpException, Injectable } from "@nestjs/common";
+import { BadRequestException, HttpException, Injectable, NotFoundException } from "@nestjs/common";
 import { ProductDto } from "./dto";
 import { PrismaService } from "../prisma/prisma.service";
 import { ConfigService } from "@nestjs/config";
@@ -10,12 +10,13 @@ export class ProductService {
   async createProduct(dto: ProductDto){
 
     dto.images = dto.images.map((image) => `${this.config.get("BASED_URL")}/uploads/${image}`)
+
     const {sizes, ...product} = dto
 
     const createdProduct = await this.prismaService.product.create({
       data: {
         ...product,
-        sizes:{
+        sizes: {
           create: sizes
         }
       },
@@ -37,7 +38,28 @@ export class ProductService {
     return this.prismaService.product.findMany()
   }
 
-  async getProductByFilter(){}
+  async getProductDetails(productId: number){
+
+    const product = await this.prismaService.product.findUnique({
+      where: {
+        id: productId
+      },
+      include: {
+        sizes: true,
+        reviews: true
+      }
+    })
+
+    if (!product){
+      throw new NotFoundException(`Product with id ${productId} is not found!`)
+    }
+
+    return product
+  }
+
+  async getProductByFilter(){
+
+  }
 
 
 }
