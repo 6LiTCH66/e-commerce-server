@@ -1,7 +1,7 @@
 import { IsEnum, IsNotEmpty, IsNumber, IsString } from "class-validator";
 import { Type } from "class-transformer";
 
-enum Size {
+export enum Size {
   XXS = 'XXS',
   XS = 'XS',
   S = 'S',
@@ -13,7 +13,7 @@ enum Size {
   XXXXL = 'XXXXL',
 }
 
-export class SizeDto{
+export class ProductVariantsDto {
   @IsNotEmpty()
   @IsEnum(Size)
   size: Size
@@ -22,4 +22,11 @@ export class SizeDto{
   @IsNumber()
   @Type(() => Number)
   stockQuantity: number;
+
+  @IsNotEmpty()
+  @IsString()
+  color: string
+
+  @IsNotEmpty()
+  colorImages: string[];
 }

@@ -1,12 +1,18 @@
 import {
-  IsArray,
+  IsArray, IsEnum,
   IsNotEmpty,
   IsNumber,
   IsString,
   ValidateNested
 } from "class-validator";
 import { Type } from "class-transformer";
-import { SizeDto } from "./size.dto";
+import { ProductVariantsDto } from "./productVariants.dto";
+
+export enum Gender{
+  Male = "Male",
+  Female = "Female",
+  Unisex = "Unisex"
+}
 
 export class ProductDto{
   @IsString()
@@ -28,13 +34,17 @@ export class ProductDto{
   @Type(() => Number)
   categoryId: number;
 
-  @IsNotEmpty()
-  images: string[];
+  // @IsNotEmpty()
+  // images: string[];
 
   @IsNotEmpty()
   @IsArray()
   @ValidateNested({ each: true })
-  @Type(() => SizeDto)
-  sizes: SizeDto[]
+  @Type(() => ProductVariantsDto)
+  productVariants: ProductVariantsDto[]
+
+  @IsNotEmpty()
+  @IsEnum(Gender)
+  gender: Gender
 
 }

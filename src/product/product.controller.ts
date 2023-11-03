@@ -12,7 +12,7 @@ import {
 import { AuthenticatedGuard } from "../auth/guard";
 import { ProductDto } from "./dto";
 import { ProductService } from "./product.service";
-import { FileInterceptor, FilesInterceptor } from "@nestjs/platform-express";
+import { AnyFilesInterceptor, FileInterceptor, FilesInterceptor } from "@nestjs/platform-express";
 import { GetUser } from "../auth/decorator";
 
 @Controller('product')
@@ -21,8 +21,8 @@ export class ProductController {
 
   @Post("create")
   @UseGuards(AuthenticatedGuard)
-  @UseInterceptors(FilesInterceptor('file'))
-  createProduct(@UploadedFiles() files: Array<Express.Multer.File>, @Body() dto: ProductDto){
+  @UseInterceptors(AnyFilesInterceptor())
+  createProduct(@UploadedFiles() files: { [fieldname: string]: Express.Multer.File[] }, @Body() dto: ProductDto){
     return this.productService.createProduct(dto)
   }
   @Get('get')

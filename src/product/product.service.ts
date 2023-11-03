@@ -9,28 +9,31 @@ export class ProductService {
 
   async createProduct(dto: ProductDto){
 
-    dto.images = dto.images.map((image) => `${this.config.get("BASED_URL")}/uploads/${image}`)
+    dto.productVariants.forEach((productVariants) => {
+      productVariants.colorImages = productVariants.colorImages.map((image) => `${this.config.get("BASED_URL")}/uploads/${image}`)
+    })
 
-    const {sizes, ...product} = dto
+    const {productVariants, ...product} = dto
 
     const createdProduct = await this.prismaService.product.create({
       data: {
         ...product,
-        sizes: {
-          create: sizes
+        productVariants: {
+          create: productVariants
         }
       },
       include: {
-        sizes: true
+        productVariants: true
       }
     })
 
     if (!createdProduct){
-      throw new BadRequestException('Unable to create a new product', { cause: new Error(), description: 'Something went wrong when creating a new product!' })
+      throw new BadRequestException('Unable to create a new product', { cause: new Error(), description: 'Something went wrong while creating a new product!' })
 
     }
 
     return createdProduct
+
 
   }
 
@@ -45,7 +48,7 @@ export class ProductService {
         id: productId
       },
       include: {
-        sizes: true,
+        productVariants: true,
         reviews: true
       }
     })
