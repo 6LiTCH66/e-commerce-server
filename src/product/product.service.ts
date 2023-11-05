@@ -1,11 +1,19 @@
 import { BadRequestException, HttpException, Injectable, NotFoundException } from "@nestjs/common";
-import { ProductDto } from "./dto";
+import { ProductDto, QueryDto } from "./dto";
 import { PrismaService } from "../prisma/prisma.service";
 import { ConfigService } from "@nestjs/config";
 
 @Injectable()
 export class ProductService {
   constructor(private prismaService: PrismaService, private config: ConfigService) {}
+
+  async getOneProduct(productId: number){
+    return this.prismaService.product.findUnique({
+      where: {
+        id: productId
+      }
+    })
+  }
 
   async createProduct(dto: ProductDto){
 
@@ -33,12 +41,6 @@ export class ProductService {
     }
 
     return createdProduct
-
-
-  }
-
-  async getAllProducts(){
-    return this.prismaService.product.findMany()
   }
 
   async getProductDetails(productId: number){
@@ -49,7 +51,18 @@ export class ProductService {
       },
       include: {
         productVariants: true,
-        reviews: true
+        reviews: {
+          include: {
+            user: {
+              select:{
+                email: true,
+                lastName: true,
+                firstName: true,
+              }
+            }
+          }
+        },
+        category: true,
       }
     })
 
@@ -60,9 +73,36 @@ export class ProductService {
     return product
   }
 
-  async getProductByFilter(){
+  async getProducts(filter: QueryDto){
+    const {min, max, size, color,sortedBy, ...sortFilter} = filter
 
+    return this.prismaService.product.findMany({
+      where: {
+        ...sortFilter,
+        productVariants: {
+          some:{
+            size: size,
+            color: color
+          }
+        },
+        price: {
+          gte: min,
+          lte: max
+        },
+      },
+      include: {
+        productVariants: {
+          where:{
+            size: size,
+            color: color
+          }
+        }
+      },
+      orderBy: {
+        price: sortedBy
+      }
+
+    })
   }
-
 
 }

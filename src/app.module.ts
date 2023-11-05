@@ -9,6 +9,7 @@ import { CartModule } from './cart/cart.module';
 import { CartItemsModule } from './cart-items/cart-items.module';
 import { ServeStaticModule } from "@nestjs/serve-static";
 import { join } from 'path';
+import { ReviewModule } from './review/review.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { join } from 'path';
       rootPath: join(__dirname, '..', 'uploads'),
       serveRoot: '/uploads',
     }),
+    ReviewModule,
   ],
 })
 export class AppModule {}

@@ -6,10 +6,12 @@ import * as multer from 'multer';
 import * as path from "path";
 import { Request } from "express";
 import { ProductVariantsDto } from "./dto";
+import { APP_PIPE } from "@nestjs/core";
 
 @Module({
   controllers: [ProductController],
   providers: [ProductService],
+  exports: [ProductService],
   imports: [
     MulterModule.register({
       storage: multer.diskStorage({

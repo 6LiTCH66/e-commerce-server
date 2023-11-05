@@ -5,11 +5,13 @@ import * as session from "express-session";
 import * as passport from "passport";
 import { PrismaSessionStore } from "@quixo3/prisma-session-store";
 import { PrismaClient } from "@prisma/client";
+import { useContainer } from "class-validator";
 
 const prisma = new PrismaClient()
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  
+  useContainer(app.select(AppModule), {fallbackOnErrors: true})
+
 
   app.useGlobalPipes(new ValidationPipe({whitelist: true, transform: true}))
 
