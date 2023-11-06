@@ -5,12 +5,6 @@ import { isProductExists } from "../validators";
 export class EditReviewDto{
 
   @IsNotEmpty()
-  @IsNumber()
-  @Type(() => Number)
-  @isProductExists()
-  productId: number;
-
-  @IsNotEmpty()
   @Min(1)
   @Max(5)
   @IsInt()

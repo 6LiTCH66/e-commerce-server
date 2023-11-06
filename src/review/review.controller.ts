@@ -22,7 +22,7 @@ export class ReviewController {
 
   @Delete('delete/:id')
   @UseGuards(ReviewOwnershipGuardGuard)
-  deleteReview(@Param('id', ParseIntPipe) productId: number) {
-    return this.reviewService.deleteReview(productId)
+  deleteReview(@Param('id', ParseIntPipe) reviewId: number) {
+    return this.reviewService.deleteReview(reviewId)
   }
 }

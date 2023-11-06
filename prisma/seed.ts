@@ -1,9 +1,13 @@
 import { PrismaClient } from "@prisma/client";
 import { faker } from '@faker-js/faker';
 import axios from "axios"
+import * as dotenv from "dotenv"
+import * as process from "process";
+
+dotenv.config()
 
 const prisma = new PrismaClient();
-const UNSPLASH_ACCESS_KEY = '';
+const UNSPLASH_ACCESS_KEY = process.env.UNSPLASH_ACCESS_KEY;
 enum Gender{
   Male = "Male",
   Female = "Female",
