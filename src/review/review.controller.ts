@@ -3,7 +3,7 @@ import { ReviewService } from "./review.service";
 import { CreateReviewDto, EditReviewDto } from "./dto";
 import { AuthenticatedGuard } from "../auth/guard";
 import { GetUser } from "../auth/decorator";
-import { NotEmptyParamPipe } from "./pipes";
+import { ReviewOwnershipGuardGuard } from "./guard";
 @UseGuards(AuthenticatedGuard)
 @Controller('review')
 export class ReviewController {
@@ -15,13 +15,13 @@ export class ReviewController {
   }
 
   @Patch('edit/:id')
-  @UsePipes(new NotEmptyParamPipe())
-  editReview(@Body() dto: EditReviewDto, @Param("id", ParseIntPipe) productId: number) {
-    return this.reviewService.editReview(dto, productId)
+  @UseGuards(ReviewOwnershipGuardGuard)
+  editReview(@Body() dto: EditReviewDto, @Param("id", ParseIntPipe) reviewId: number) {
+    return this.reviewService.editReview(dto, reviewId)
   }
 
   @Delete('delete/:id')
-  @UsePipes(new NotEmptyParamPipe())
+  @UseGuards(ReviewOwnershipGuardGuard)
   deleteReview(@Param('id', ParseIntPipe) productId: number) {
     return this.reviewService.deleteReview(productId)
   }

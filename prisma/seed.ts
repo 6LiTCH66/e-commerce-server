@@ -3,7 +3,7 @@ import { faker } from '@faker-js/faker';
 import axios from "axios"
 
 const prisma = new PrismaClient();
-const UNSPLASH_ACCESS_KEY = 'nexttimebuddy';
+const UNSPLASH_ACCESS_KEY = '';
 enum Gender{
   Male = "Male",
   Female = "Female",

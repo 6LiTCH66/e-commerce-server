@@ -7,6 +7,14 @@ import { ProductService } from "../product/product.service";
 export class ReviewService {
   constructor(private prismaService: PrismaService, private productService: ProductService) {}
 
+  async getReviewById(reviewId: number) {
+    return this.prismaService.review.findUnique({
+      where: {
+        id: reviewId
+      }
+    })
+  }
+
   async createReview(dto: CreateReviewDto, userId: number){
 
     await this.prismaService.review.create({
@@ -21,7 +29,8 @@ export class ReviewService {
     }
   }
 
-  async editReview(dto: EditReviewDto, productId: number){
+  async editReview(dto: EditReviewDto, reviewId: number){
+    console.log(dto);
 
   }
 
