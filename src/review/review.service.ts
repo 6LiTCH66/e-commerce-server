@@ -1,7 +1,6 @@
-import { BadRequestException, Injectable, NotFoundException, UsePipes } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service";
 import { CreateReviewDto, EditReviewDto } from "./dto";
-import { ProductService } from "../product/product.service";
 
 @Injectable()
 export class ReviewService {
@@ -35,7 +34,6 @@ export class ReviewService {
         ...dto
       }
     })
-
 
   }
 
