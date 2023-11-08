@@ -5,7 +5,6 @@ import {
   ValidatorConstraint,
   ValidatorConstraintInterface
 } from "class-validator";
-import { PrismaService } from "../../prisma/prisma.service";
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { ProductService } from "../../product/product.service";
 

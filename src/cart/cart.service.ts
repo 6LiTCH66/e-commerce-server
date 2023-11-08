@@ -5,6 +5,15 @@ import { PrismaService } from "../prisma/prisma.service";
 export class CartService {
   constructor(private prismaService: PrismaService) {}
 
+  async isCartExist(userId: number){
+    return this.prismaService.cart.findFirst({
+      where: {
+        userId: userId
+      }
+    })
+  }
+
+
   async createCart(userId: number){
     return this.prismaService.cart.create({
       data:{
@@ -14,14 +23,15 @@ export class CartService {
   }
 
   async getUserCart(userId: number){
-    return this.prismaService.cart.findMany({
+    return this.prismaService.cart.findFirst({
       where: {
         userId: userId
       },
       include: {
         items: {
           include: {
-            product: true
+            product: true,
+            productVariants: true
           }
         }
       }

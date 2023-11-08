@@ -7,6 +7,17 @@ import { ConfigService } from "@nestjs/config";
 export class ProductService {
   constructor(private prismaService: PrismaService, private config: ConfigService) {}
 
+
+  async getProductWithProductVariant(productId: number, productVariantId: number){
+    return this.prismaService.productVariants.findUnique({
+      where: {
+        id: productVariantId,
+        productId: productId
+      }
+    })
+
+  }
+
   async getOneProduct(productId: number){
     return this.prismaService.product.findUnique({
       where: {
@@ -14,6 +25,7 @@ export class ProductService {
       }
     })
   }
+
 
   async createProduct(dto: ProductDto){
 

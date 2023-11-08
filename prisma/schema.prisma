@@ -56,6 +56,7 @@ model ProductVariants {
   colorImages   String[]
   productId     Int
   product       Product      @relation(fields: [productId], references: [id], onDelete: Cascade)
+  cartItems     CartItems[]
 }
 
 model Product {
@@ -111,12 +112,14 @@ model Cart {
 }
 
 model CartItems {
-  id        Int     @id @default(autoincrement())
-  cardId    Int
-  cart      Cart    @relation(fields: [cardId], references: [id])
-  productId Int
-  product   Product @relation(fields: [productId], references: [id])
-  quantity  Int
+  id                Int             @id @default(autoincrement())
+  cardId            Int
+  cart              Cart            @relation(fields: [cardId], references: [id])
+  productId         Int
+  product           Product         @relation(fields: [productId], references: [id])
+  productVariantsId Int
+  productVariants   ProductVariants @relation(fields: [productVariantsId], references: [id])
+  quantity          Int
 }
 
 model Session {
