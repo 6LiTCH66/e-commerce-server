@@ -10,6 +10,7 @@ import { CartItemsModule } from './cart-items/cart-items.module';
 import { ServeStaticModule } from "@nestjs/serve-static";
 import { join } from 'path';
 import { ReviewModule } from './review/review.module';
+import { CommonModule } from './common/common.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { ReviewModule } from './review/review.module';
       serveRoot: '/uploads',
     }),
     ReviewModule,
+    CommonModule,
   ],
 })
 export class AppModule {}

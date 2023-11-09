@@ -14,13 +14,13 @@ export class CartItemsController {
     return this.cartItemsService.addItemToCart(dto, userId)
   }
 
-  // add custom guard that checks if current own this cart item
+  // add custom guard that checks if current user own this cart item
   @Delete('delete/:id')
   deleteItemFormCart(@Param('id', ParseIntPipe) cartItemId: number){
     return this.cartItemsService.deleteItemFromCart(cartItemId)
   }
 
-  // add custom guard that checks if current own this cart item
+  // add custom guard that checks if current user own this cart item
   @Patch('edit/:id')
   editItemInCart(@Body() dto: EditItemDto, @Param('id', ParseIntPipe) cartItemId: number){
     return this.cartItemsService.editCartItem(dto, cartItemId)

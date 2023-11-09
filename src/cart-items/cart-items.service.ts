@@ -22,46 +22,47 @@ export class CartItemsService {
     const findProductQuantity = await this.productService.getProductWithProductVariant(dto.productId, dto.productVariantsId)
 
 
-    if (!findProductQuantity){
-      throw new NotFoundException(`ProductVariant with ID ${dto.productVariantsId} not found for product with ID ${dto.productId}.`)
-    }
-
-    if (findProductQuantity.stockQuantity < dto.quantity){
-      throw new NotAcceptableException("Quantity cannot be greater than stock quantity of product!")
-    }
+    // if (!findProductQuantity){
+    //   throw new NotFoundException(`ProductVariant with ID ${dto.productVariantsId} not found for product with ID ${dto.productId}.`)
+    // }
+    //
+    // if (findProductQuantity.stockQuantity < dto.quantity){
+    //   throw new NotAcceptableException("Quantity cannot be greater than stock quantity of product!")
+    // }
 
 
     if (!isUserCartExist){
 
       const createdCart = await this.cartService.createCart(userId)
 
-      return this.prismaService.cartItems.create({
-        data:{
-          ...dto,
-          cardId: createdCart.id
-        }
-      })
+      // return this.prismaService.cartItems.create({
+      //   data:{
+      //     ...dto,
+      //     cardId: createdCart.id
+      //   }
+      // })
     }
 
     const findItemDuplicate = await this.findDuplicate(dto.productVariantsId)
 
-    if(findItemDuplicate && (findItemDuplicate.quantity + dto.quantity) < findProductQuantity.stockQuantity){
-      return this.prismaService.cartItems.update({
-        where:{
-          id: findItemDuplicate.id
-        },
-        data: {
-          quantity: findItemDuplicate.quantity + dto.quantity
-        }
-      })
-    }
+    // if(findItemDuplicate && (findItemDuplicate.quantity + dto.quantity) < findProductQuantity.stockQuantity){
+    //   return this.prismaService.cartItems.update({
+    //     where:{
+    //       id: findItemDuplicate.id
+    //     },
+    //     data: {
+    //       quantity: findItemDuplicate.quantity + dto.quantity
+    //     }
+    //   })
+    // }
 
-    return this.prismaService.cartItems.create({
-      data:{
-        ...dto,
-        cardId: isUserCartExist.id
-      }
-    })
+    // return this.prismaService.cartItems.create({
+    //   data:{
+    //     ...dto,
+    //     cardId: isUserCartExist.id
+    //   }
+    // })
+    return {}
   }
 
   async deleteItemFromCart(cartItemId: number){

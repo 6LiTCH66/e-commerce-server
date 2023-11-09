@@ -1,6 +1,6 @@
 import { IsInt, IsNotEmpty, IsNumber, IsString, Max, Min, Validate } from "class-validator";
 import { Type } from "class-transformer";
-import { isProductExists, ProductExistsValidator } from "../validators";
+import { isProductExists } from "../../common/validators";
 
 export class CreateReviewDto{
 

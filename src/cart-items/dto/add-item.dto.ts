@@ -1,6 +1,8 @@
-import { isProductExists } from "../../review/validators";
-import { IsInt, IsNotEmpty, IsPositive } from "class-validator";
+import { IsInt, IsNotEmpty, IsPositive, Validate } from "class-validator";
 import { Type } from "class-transformer";
+import { isQuantityOverLimit } from "../validator";
+import { isProductVariantBelongToProduct } from "../validator";
+import { isProductExists } from "../../common/validators";
 
 export class AddItemDto{
 
@@ -8,19 +10,21 @@ export class AddItemDto{
   @Type(() => Number)
   @IsInt()
   @isProductExists()
-  // isProductExists have to be in shared validators
+  // isProductExists have to be in shared validator
   productId: number;
 
   @IsNotEmpty()
   @IsInt()
-  @IsPositive()
-  // create a validator that checks if quantity is not over the limit
-  quantity: number;
+  @Type(() => Number)
+  @isProductVariantBelongToProduct()
+  productVariantsId: number
 
   @IsNotEmpty()
   @IsInt()
-  @Type(() => Number)
-  // create a validator that checks if productVariantsId belong to productId
-  productVariantsId: number
+  @IsPositive()
+  @isQuantityOverLimit()
+  quantity: number;
+
+
 
 }
