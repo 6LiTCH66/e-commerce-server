@@ -1,10 +1,11 @@
-import { IsNotEmpty, IsPositive } from "class-validator";
-import { isQuantityOverLimit } from "../validator";
+import { IsInt, IsNotEmpty, IsPositive } from "class-validator";
 
 export class EditItemDto{
 
   @IsNotEmpty()
+  @IsInt()
   @IsPositive()
-  @isQuantityOverLimit()
   quantity: number;
+
+
 }

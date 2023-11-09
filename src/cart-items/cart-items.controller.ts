@@ -3,6 +3,7 @@ import { AddItemDto, EditItemDto } from "./dto";
 import { AuthenticatedGuard } from "../auth/guard";
 import { GetUser } from "../auth/decorator";
 import { CartItemsService } from "./cart-items.service";
+import { CartItemOwnershipGuard } from "./guard";
 
 @UseGuards(AuthenticatedGuard)
 @Controller('cart-items')
@@ -14,13 +15,13 @@ export class CartItemsController {
     return this.cartItemsService.addItemToCart(dto, userId)
   }
 
-  // add custom guard that checks if current user own this cart item
+  @UseGuards(CartItemOwnershipGuard)
   @Delete('delete/:id')
   deleteItemFormCart(@Param('id', ParseIntPipe) cartItemId: number){
     return this.cartItemsService.deleteItemFromCart(cartItemId)
   }
 
-  // add custom guard that checks if current user own this cart item
+  @UseGuards(CartItemOwnershipGuard)
   @Patch('edit/:id')
   editItemInCart(@Body() dto: EditItemDto, @Param('id', ParseIntPipe) cartItemId: number){
     return this.cartItemsService.editCartItem(dto, cartItemId)

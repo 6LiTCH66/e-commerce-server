@@ -5,10 +5,24 @@ import { PrismaService } from "../prisma/prisma.service";
 export class CartService {
   constructor(private prismaService: PrismaService) {}
 
+  async isCartExistWithProductVariant(userId: number, cartItemId?: number){
+    return this.prismaService.cart.findFirst({
+      where: {
+        userId: userId,
+        items: {
+          some: {
+            id: cartItemId
+          }
+        }
+
+      }
+    })
+  }
   async isCartExist(userId: number){
     return this.prismaService.cart.findFirst({
       where: {
-        userId: userId
+        userId: userId,
+
       }
     })
   }

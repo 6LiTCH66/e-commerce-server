@@ -8,12 +8,27 @@ import { ProductService } from "../product/product.service";
 export class CartItemsService {
   constructor(private prismaService: PrismaService, private cartService: CartService, private productService: ProductService) {}
 
-  async findDuplicate(productVariantId: number){
-    return this.prismaService.cartItems.findFirst({
+  async findDuplicateInUserCart(productVariantId: number, userId: number){
+
+    return this.prismaService.cart.findFirst({
       where: {
-        productVariantsId: productVariantId
+        items: {
+          some: {
+            productVariantsId: productVariantId
+          }
+        },
+        userId: userId
+
+      },
+      select: {
+        items: {
+          where: {
+            productVariantsId: productVariantId
+          }
+        }
       }
     })
+
   }
 
   async addItemToCart(dto: AddItemDto, userId: number){
@@ -22,59 +37,67 @@ export class CartItemsService {
     const findProductQuantity = await this.productService.getProductWithProductVariant(dto.productId, dto.productVariantsId)
 
 
-    // if (!findProductQuantity){
-    //   throw new NotFoundException(`ProductVariant with ID ${dto.productVariantsId} not found for product with ID ${dto.productId}.`)
-    // }
-    //
-    // if (findProductQuantity.stockQuantity < dto.quantity){
-    //   throw new NotAcceptableException("Quantity cannot be greater than stock quantity of product!")
-    // }
-
-
     if (!isUserCartExist){
 
       const createdCart = await this.cartService.createCart(userId)
 
-      // return this.prismaService.cartItems.create({
-      //   data:{
-      //     ...dto,
-      //     cardId: createdCart.id
-      //   }
-      // })
+      return this.prismaService.cartItems.create({
+        data:{
+          ...dto,
+          cardId: createdCart.id
+        }
+      })
     }
 
-    const findItemDuplicate = await this.findDuplicate(dto.productVariantsId)
+    const findItemDuplicate = await this.findDuplicateInUserCart(dto.productVariantsId, userId)
 
-    // if(findItemDuplicate && (findItemDuplicate.quantity + dto.quantity) < findProductQuantity.stockQuantity){
-    //   return this.prismaService.cartItems.update({
-    //     where:{
-    //       id: findItemDuplicate.id
-    //     },
-    //     data: {
-    //       quantity: findItemDuplicate.quantity + dto.quantity
-    //     }
-    //   })
-    // }
+    if(findItemDuplicate){
 
-    // return this.prismaService.cartItems.create({
-    //   data:{
-    //     ...dto,
-    //     cardId: isUserCartExist.id
-    //   }
-    // })
-    return {}
+      const itemDuplicate = findItemDuplicate.items[0]
+
+      if (((itemDuplicate.quantity + dto.quantity) < findProductQuantity.stockQuantity)){
+        return this.prismaService.cartItems.update({
+          where:{
+            id: itemDuplicate.id,
+          },
+          data: {
+            quantity: itemDuplicate.quantity + dto.quantity
+          }
+        })
+      }
+    }
+
+    return this.prismaService.cartItems.create({
+      data:{
+        ...dto,
+        cardId: isUserCartExist.id
+      }
+    })
   }
 
   async deleteItemFromCart(cartItemId: number){
     return this.prismaService.cartItems.delete({
       where: {
-        id: cartItemId
+        id: cartItemId,
       }
     })
   }
 
   async editCartItem(dto: EditItemDto, cartItemId: number){
-    // const
+
+    const cartItem = await this.prismaService.cartItems.findFirst({
+      where: {
+        id: cartItemId
+      },
+      select: {
+        productVariants: true
+      }
+    })
+
+    if (dto.quantity > cartItem.productVariants.stockQuantity){
+      throw new NotAcceptableException("Quantity cannot be greater than stock quantity of product!")
+    }
+
 
     return this.prismaService.cartItems.update({
       where: {

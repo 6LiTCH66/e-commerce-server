@@ -9,7 +9,7 @@ import { ProductService } from "../../product/product.service";
 import { Injectable, NotAcceptableException, NotFoundException } from "@nestjs/common";
 
 
-export function isQuantityOverLimit(validationOptions?: ValidationOptions){
+export function isQuantityNotOverLimit(validationOptions?: ValidationOptions){
   return function (object: any, propertyName: string) {
     registerDecorator({
       target: object.constructor,

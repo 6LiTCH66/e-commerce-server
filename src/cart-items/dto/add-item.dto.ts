@@ -1,6 +1,6 @@
 import { IsInt, IsNotEmpty, IsPositive, Validate } from "class-validator";
 import { Type } from "class-transformer";
-import { isQuantityOverLimit } from "../validator";
+import { isQuantityNotOverLimit } from "../validator";
 import { isProductVariantBelongToProduct } from "../validator";
 import { isProductExists } from "../../common/validators";
 
@@ -10,7 +10,6 @@ export class AddItemDto{
   @Type(() => Number)
   @IsInt()
   @isProductExists()
-  // isProductExists have to be in shared validator
   productId: number;
 
   @IsNotEmpty()
@@ -22,7 +21,7 @@ export class AddItemDto{
   @IsNotEmpty()
   @IsInt()
   @IsPositive()
-  @isQuantityOverLimit()
+  @isQuantityNotOverLimit()
   quantity: number;
 
 
