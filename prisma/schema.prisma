@@ -49,14 +49,15 @@ enum Gender {
 }
 
 model ProductVariants {
-  id            Int          @id() @default(autoincrement())
+  id            Int           @id() @default(autoincrement())
   size          SizeVariants
   stockQuantity Int
   color         String
   colorImages   String[]
   productId     Int
-  product       Product      @relation(fields: [productId], references: [id], onDelete: Cascade)
+  product       Product       @relation(fields: [productId], references: [id], onDelete: Cascade)
   cartItems     CartItems[]
+  orderDetail   OrderDetail[]
 }
 
 model Product {
@@ -84,13 +85,15 @@ model Order {
 }
 
 model OrderDetail {
-  id        Int     @id @default(autoincrement())
-  orderId   Int
-  order     Order   @relation(fields: [orderId], references: [id])
-  productId Int
-  product   Product @relation(fields: [productId], references: [id])
-  quantity  Int
-  price     Float
+  id               Int             @id @default(autoincrement())
+  orderId          Int
+  order            Order           @relation(fields: [orderId], references: [id])
+  productId        Int
+  product          Product         @relation(fields: [productId], references: [id])
+  productVariantId Int
+  productVariant   ProductVariants @relation(fields: [productVariantId], references: [id])
+  quantity         Int
+  price            Float
 }
 
 model Review {

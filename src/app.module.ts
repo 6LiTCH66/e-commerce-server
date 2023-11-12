@@ -11,6 +11,7 @@ import { ServeStaticModule } from "@nestjs/serve-static";
 import { join } from 'path';
 import { ReviewModule } from './review/review.module';
 import { CommonModule } from './common/common.module';
+import { OrderModule } from './order/order.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { CommonModule } from './common/common.module';
     }),
     ReviewModule,
     CommonModule,
+    OrderModule,
   ],
 })
 export class AppModule {}

@@ -36,6 +36,43 @@ export class CartService {
     })
   }
 
+
+  async deleteAllCartItems(cartId: number){
+    return this.prismaService.cartItems.deleteMany({
+      where: {
+        cardId: cartId
+      }
+    })
+  }
+  async getUserCartId(userId: number){
+    return this.prismaService.cart.findFirst({
+      where:{
+        userId: userId
+      },
+      select: {
+        id: true
+      }
+    })
+  }
+
+
+  async getUserCartItems(userId: number){
+    const userCart = await this.getUserCart(userId)
+
+    return this.prismaService.cartItems.findMany({
+      where: {
+        cardId: userCart.id
+      },
+      include: {
+        product: {
+          select: {
+            price: true
+          }
+        }
+      }
+    })
+  }
+
   async getUserCart(userId: number){
     return this.prismaService.cart.findFirst({
       where: {

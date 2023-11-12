@@ -9,6 +9,7 @@ import { ProductVariantOwnershipValidator, QuantityLimitValidator } from "./vali
   providers: [CartItemsService, QuantityLimitValidator, ProductVariantOwnershipValidator],
   controllers: [CartItemsController],
   imports: [CartModule, ProductModule]
+  
 
 })
 export class CartItemsModule {}
