@@ -7,6 +7,10 @@ import { PrismaSessionStore } from "@quixo3/prisma-session-store";
 import { PrismaClient } from "@prisma/client";
 import { useContainer } from "class-validator";
 
+import * as connectRedis from 'connect-redis';
+import Redis from 'ioredis';
+
+
 const prisma = new PrismaClient()
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -14,6 +18,19 @@ async function bootstrap() {
 
 
   app.useGlobalPipes(new ValidationPipe({whitelist: true, transform: true}))
+
+  const RedisStore = connectRedis(session);
+
+  const redisClient = new Redis({
+    host: 'localhost',
+    port: 6379,
+  });
+
+
+  redisClient.on('connect', () =>
+    console.log('Connected to redis successfully')
+  );
+
 
   app.use(
     session({
@@ -23,14 +40,7 @@ async function bootstrap() {
       cookie: {
         maxAge: 3600000,
       },
-      store: new PrismaSessionStore(
-        prisma as any,
-        {
-          checkPeriod: 2 * 60 * 1000,  //ms
-          dbRecordIdIsSessionId: true,
-          dbRecordIdFunction: undefined,
-        }
-      )
+      store: new RedisStore({client: redisClient}),
     }),
   );
 
